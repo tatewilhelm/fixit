@@ -19,7 +19,7 @@ class _PartsPageState extends State<PartsPage> {
   final TextEditingController _minStockController = TextEditingController();
   final TextEditingController _skuEntryController = TextEditingController();
 
-  final int _rowsPerPage = 5; // Set the number of rows per page for pagination
+  final int _rowsPerPage = 10; // Set the number of rows per page for pagination
 
   Future<void> _addPartEntry() async {
     final String sku = _skuController.text;
@@ -194,6 +194,7 @@ class _PartsPageState extends State<PartsPage> {
       return data['stock'] < data['minStock'];
     }).toList();
 
+    // ignore: use_build_context_synchronously
     showDialog(
       context: context,
       builder: (context) {
@@ -329,29 +330,24 @@ class _PartsPageState extends State<PartsPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: _showCreatePartEntryDialog,
+                ElevatedButton(
+                  onPressed: _showCreatePartEntryDialog,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 12.0, right: 12.0),
                     child: Text('Create a Part Entry'),
                   ),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _showUpdateStockDialog(1),
-                    child: Text('Add a Part'),
-                  ),
+                ElevatedButton(
+                  onPressed: () => _showUpdateStockDialog(1),
+                  child: Text('Add a Part'),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _showUpdateStockDialog(-1),
-                    child: Text('Remove a Part'),
-                  ),
+                ElevatedButton(
+                  onPressed: () => _showUpdateStockDialog(-1),
+                  child: Text('Remove a Part'),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: _showLowInventoryParts,
-                    child: Text('Low Inventory Parts'),
-                  ),
+                ElevatedButton(
+                  onPressed: _showLowInventoryParts,
+                  child: Text('Low Inventory Parts'),
                 ),
               ],
             ),
@@ -377,37 +373,52 @@ class _PartsPageState extends State<PartsPage> {
                 for (var doc in snapshot.data!.docs) {
                   final data = doc.data() as Map<String, dynamic>;
 
-                    totalParts += data['stock'].toInt();
-                    totalValue += data['stock'] * data['costPrice'];
+                  totalParts += data['stock'].toInt();
+                  totalValue += data['stock'] * data['costPrice'];
                 }
 
-                return Row(
+                return Column(
                   children: [
-                    Expanded(
-                      flex: 2,
-                      child: PaginatedDataTable(
-                        header: Text('Parts Inventory'),
-                        columns: const [
-                          DataColumn(label: Text('SKU')),
-                          DataColumn(label: Text('Description')),
-                          DataColumn(label: Text('Cost Price')),
-                          DataColumn(label: Text('Stock')),
-                          DataColumn(label: Text('Minimum Amount')),
-                          DataColumn(label: Text('Actions')),
-                        ],
-                        source: PartsDataSource(snapshot.data!.docs, _showEditPartDialog, _removePart),
-                        rowsPerPage: _rowsPerPage,
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: PaginatedDataTable(
+                              header: Text('Parts Inventory'),
+                              columns: const [
+                                DataColumn(label: Text('SKU')),
+                                DataColumn(label: Text('Description')),
+                                DataColumn(label: Text('Cost Price')),
+                                DataColumn(label: Text('Stock')),
+                                DataColumn(label: Text('Minimum Amount')),
+                                DataColumn(label: Text('')),
+                              ],
+                              source: PartsDataSource(snapshot.data!.docs,
+                                  _showEditPartDialog, _removePart),
+                              rowsPerPage: _rowsPerPage,
+                            ),
+                          ),
+                        ),
+                        // Expanded(
+                        //   child: ColoredBox(
+                        //     color: Colors.white,
+                        //     child: Column(
+                        //       mainAxisAlignment: MainAxisAlignment.center,
+                        //       children: [
+
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
                     ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Total Parts: $totalParts'),
-                          Text('Total Value: \$${totalValue.toStringAsFixed(2)}'),
-                        ],
-                      ),
-                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('Total Parts: $totalParts', style: TextStyle(fontSize: 30, color: Colors.white)),
+                        Text('Total Value: \$${totalValue.toStringAsFixed(2)}' ,style: TextStyle(fontSize: 30, color: Colors.white)),
+                      ],
+                    )
                   ],
                 );
               },
