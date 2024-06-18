@@ -1,0 +1,38 @@
+Fixit!
+"Fixit! Damnit!"
+
+Fixit! is an application used to track repair of devices, quotes, progress, available parts, 
+and other things for small scale repair companies.
+
+Fixit! is a flutter based application that runs on mobile (iPad and other tablets), desktop, and web (if possible).
+
+Fixit! stores information on a human readable Google Sheet, or a locally stored spreadsheet. This is so that:
+1. Fixit! data is not lost if Fixit doesnt run anymore.
+2. Fixit! is not required to update information
+3. Fixit! data is extremely portable
+4. Security is ez
+
+Fixit keeps track of every repair and the following information:
+- Customer Info / Contact (name, phone number, email, etc)
+- Device Info (Device info is elaborated on later)
+- Problem Description
+- Parts needed / used (parts/inventory are elaborated on later)
+- Repair Completion status (Not started, waiting on parts, working, finished)
+- Quotes / Estimates
+- Actual Price
+- Amt Paid / Owed (as well as generating invoices)
+
+It also keeps track of types of devices. So the standard Fixit! Device library will look something like
+
+> Apple - Category
+    > iPhone - Category
+        > X Series - Category
+            - iPhone X
+            - iPhone XR
+            - iPhone XS
+            - iPhone XS Max
+        - 11 Series - Category
+        - 12 Series - Category
+    - iPad - Category
+    - Apple Watch - Category
+    - iMac
